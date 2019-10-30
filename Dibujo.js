@@ -140,8 +140,8 @@ class Dibujo{
                 this.concatenacion(this.exp);
                 break;
             default:
-                for(let i=0;i<this.exp.length;i++){
-                    this.analiza(this.exp[i]);
+                for(this.j=0;this.j<this.exp.length;this.j++){
+                    this.analiza(this.exp[this.j]);
                 }
                 do{
                     this.pop();
@@ -155,30 +155,39 @@ class Dibujo{
         if(dato=='*'||dato=='|'||dato=='('||dato==')'){
             switch(dato){
                 case ')':
-                    alert('llegó');
                     break;
                 case '(':
                     do{
                         this.pop();
                     }while(this.front<this.top);
+                    this.limpiar_cola();
                     break;
                 case '*':
-                    var cerra = this.cola;
-                    this.cerradura(cerra);
+                    if(this.exp[this.j-1]==')'){
+                        var cerra = this.cola;
+                        this.cerradura(cerra);
+                        this.limpiar_cola();
+                    }
+                    else{
+                        do{
+                            this.pop();
+                        }while(this.front<this.top-1);
+                        this.limpiar_cola();
+                        this.cerradura(this.exp[this.j-1]);
+                    }
                     break;
+                    
                 case '|':
                     break;
             }
         }
         else{
             this.push(dato);
-            this.j++;
         }
     }
     push(dato){
        if(this.top<=50){
            this.cola[this.top]=dato;
-           this.operador_cola();
            this.top++;
        } 
        else{
@@ -200,20 +209,11 @@ class Dibujo{
             alert("La cola está vacía");
         }
     }
-    operador_cola(){
-        switch(this.cola[this.top]){
-            case '*':
-                    this.op_top=3;
-                    break;
-                case '|':
-                    this.op_top=2;
-                    break;
-                case '(':
-                    this.op_top=0;
-                    break;
-                default:
-                    this.op_top=0;
-        }
+    limpiar_cola(){
+        this.cola=0;
+        this.cola=[];
+        this.front=0;
+        this.top=0;
     }
 }
 

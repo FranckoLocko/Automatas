@@ -1,4 +1,10 @@
-class Automata {
+let estado = 65;
+let x = 5,
+    y = 6;
+let cont = 0; //contador de posicion para el vector c_estados.
+let c_estados = [];
+
+class Automata{
     constructor(exp) {
         this.exp = exp;
     }
@@ -6,7 +12,7 @@ class Automata {
 
 class UI {
     metodo_prueba(AF) {
-        const insertar = document.getElementById('grafo');
+        const insertar = document.getElementById('definicion');
         const element = document.createElement('div');
         element.innerHTML = `
             <div class = "card text-center mb-4"> 
@@ -16,7 +22,7 @@ class UI {
             </div>
         `;
         insertar.appendChild(element);
-        //this.resetearformulario();
+        this.resetearformulario();
     }
     resetearformulario(){
         document.getElementById('Formulario').reset();
@@ -34,6 +40,8 @@ document.getElementById('Formulario')
         const ui = new UI();
         ui.metodo_prueba(AF);
         
+        //const dib = new Dibujo();
+
 
         e.preventDefault();
     });

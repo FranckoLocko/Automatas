@@ -17,12 +17,12 @@ class UI {
         element.innerHTML = `
             <div class = "card text-center mb-4"> 
                 <div class="card-body">
-                    <strong>Autooo</strong>: ${AF.exp}
+                    <strong>Expresión Regular</strong>: ${AF.exp}
                 </div>
             </div>
         `;
         insertar.appendChild(element);
-        this.resetearformulario();
+        //this.resetearformulario();
     }
     resetearformulario(){
         document.getElementById('Formulario').reset();
@@ -34,6 +34,7 @@ class UI {
 document.getElementById('Formulario')
     .addEventListener('submit', function(e){
         const exp = document.getElementById('exp_reg').value;
+       
         
         const AF = new Automata(exp);
 

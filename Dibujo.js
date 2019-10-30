@@ -28,6 +28,19 @@ class Dibujo{
         ctx.lineTo(this.x+50,this.y);
         this.x+=100;
     }
+    flecha(){
+        var canvas = document.getElementById("lienzo");
+        var ctx = canvas.getContext("2d");
+        ctx.moveTo(this.x,this.y);
+        ctx.strokeStyle = "#6ab150";
+        ctx.lineWidth = 3;
+        ctx.lineTo(this.x+50,this.y);
+        this.x+=100;
+        ctx.lineTo(this.x-60,this.y-10);
+        ctx.lineTo(this.x-50,this.y);
+        ctx.lineTo(this.x-60,this.y+10);
+        
+    }
     texto(x1,y1){
         var txt = document.querySelector("canvas").getContext("2d");
         txt.font="20px arial";
@@ -37,11 +50,11 @@ class Dibujo{
     cerradura(){
         this.linea();
         this.circulo();
-        this.linea();
+        this.flecha();
         this.circulo();
-        this.linea();
+        this.flecha();
         this.circulo();
-        this.linea();
+        this.flecha();
         this.circulo();
     }
 

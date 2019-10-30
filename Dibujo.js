@@ -11,21 +11,16 @@ class Dibujo{
         var canvas = document.getElementById("lienzo");
         var ctx = canvas.getContext("2d");
         ctx.moveTo(this.x,this.y);
-        ctx.strokeStyle = "#6ab150";
-        ctx.fillStyle = "#ffffff";
-        ctx.lineWidth = 3;
         ctx.arc(this.x-25,this.y,25,0,2*Math.PI,true);
         ctx.stroke();
-        var centrox=this.x-31;
-        var centroy=this.y+5;
+        var centrox=this.x-33;
+        var centroy=this.y+6;
         this.estado(centrox,centroy)
     }
     linea(){
         var canvas = document.getElementById("lienzo");
         var ctx = canvas.getContext("2d");
         ctx.moveTo(this.x,this.y);
-        ctx.strokeStyle = "#6ab150";
-        ctx.lineWidth = 3;
         ctx.lineTo(this.x+50,this.y);
         this.x+=100;
     }
@@ -39,7 +34,6 @@ class Dibujo{
         ctx.lineTo(this.x-60,this.y-10);
         ctx.lineTo(this.x-50,this.y);
         ctx.lineTo(this.x-60,this.y+10);
-        
     }
     regresar(x1,x2,y1,y2){
         var canvas = document.getElementById("lienzo");
@@ -81,16 +75,17 @@ class Dibujo{
         txt.fillText(simb,x1+20,y1-10);
     }
     cerradura(){
-        this.linea();
-        this.circulo();
         var xei=this.x;
         var yei=this.y;
         this.flecha('ε');
         this.circulo();
         var x_inicial=this.x;
         var y_inicial=this.y;
-        this.flecha(this.exp[0]);
-        this.circulo();
+        for(let i=0;i<this.exp.length;i++){
+            this.flecha(this.exp[i]);
+            this.circulo();
+        }
+        
         var x_final=this.x;
         var y_final=this.y;
         this.regresar(x_inicial,x_final,y_inicial,y_final)
@@ -103,6 +98,36 @@ class Dibujo{
     resetearformulario(){
         document.getElementById('Formulario').reset();
     }
+    concatenacion(){
+        this.flecha(this.exp[0]);
+        this.circulo();
+    }
+    orr(){
+
+    }
+    estado_inicial(){
+        this.linea();
+        this.circulo();
+    }
+    estado_final(){
+        var canvas = document.getElementById("lienzo");
+        var ctx = canvas.getContext("2d");
+        ctx.strokeStyle = "#ffffff";
+        ctx.fillStyle = "#ffffff";
+        ctx.lineWidth = 5;
+        ctx.moveTo(this.x,this.y);
+        ctx.arc(this.x-25,this.y,25,0,2*Math.PI,true);
+        ctx.moveTo(this.x-7,this.y);
+        ctx.arc(this.x-25,this.y,18,0,2*Math.PI,true);
+        ctx.stroke();
+    }
+    analizar_exp(){
+        var z=1;
+        for(let i=0;i<this.exp.length;i++){
+            
+            z++;
+        }
+    }
 
 }
 
@@ -112,7 +137,11 @@ document.getElementById('Formulario')
        // alert("1");
         const exp = document.getElementById('exp_reg').value;
         const graf = new Dibujo(exp);
+        graf.estado_inicial();
         graf.cerradura();
+        graf.concatenacion();
+        graf.estado_final();
+        //graf.analizar_exp();
 
         
        // alert("3");

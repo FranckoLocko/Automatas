@@ -8,6 +8,7 @@
     <title>AUTOMATAS</title>
     <!--Boostrap CDN-->
     <link rel="stylesheet" href="https://bootswatch.com/4/lumen/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/main.css">
 </head>
 
 <body>
@@ -18,8 +19,8 @@
 
     <div class="container">
         <!--Aplicacion-->
-        <div id="App" class="row pt-5">
-            <div class="col-md-4">
+        <div id="App" class="row pt-4">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
                         <h4>AUTÓMATAS FINITOS</h4>
@@ -33,18 +34,18 @@
 
                 </div>
             </div>
+            <div class="row pt-5">
+                <span class="container-fluid">
+                    <canvas id="lienzo" width="3000" height="500"></canvas>
+                </span>    
+            </div>
             <div id="definicion" class="col-md-4"></div>
         </div>
     </div>
-    <div class="container">
-        <div class="row pt-5">
-            <canvas id="lienzo" width="800" height="500" style="border: 2px solid #c8c8c8"></canvas>
-        </div>
-   
-    </div>
 
 
-    <script src="app2.js"></script>
+
+    <script src="app.js"></script>
     <script src="Dibujo.js"></script>
 </body>
 

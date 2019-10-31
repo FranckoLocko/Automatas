@@ -42,6 +42,8 @@ class UI{
     }
     formato_tabla(){
         //Agregar simbolos a la tabla
+        this.columnas('F')
+        this.columnas('ε');
         for(let i=this.exp.length-1;i>=0;i--){
             this.analiza_simb(this.exp[i]);
         }

@@ -286,8 +286,9 @@ class Dibujo{
 document.getElementById('Formulario')
     .addEventListener('submit', function(e){
        // alert("1");
-        const exp = document.getElementById('exp_reg').value;
-        const graf = new Dibujo(exp.toLowerCase());
+        const er = document.getElementById('exp_reg').value;
+        var exp = er;
+        const graf = new Dibujo(exp.toLowerCase().trim().replace(/ /g, ""));
         graf.borrar();
         //graf.estado_inicial();
         //graf.cerradura();

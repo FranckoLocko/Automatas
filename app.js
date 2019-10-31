@@ -27,9 +27,9 @@ class UI {
 
 document.getElementById('Formulario')
     .addEventListener('submit', function(e){
-        const exp = document.getElementById('exp_reg').value;
-        
-        const AF = new Automata(exp);
+        const er = document.getElementById('exp_reg').value;
+        var exp = er;
+        const AF = new Automata(exp.toLowerCase().trim().replace(/ /g, ""));
 
         const ui = new UI();
         ui.metodo_prueba(AF);

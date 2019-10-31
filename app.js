@@ -1,9 +1,3 @@
-let estado = 65;
-let x = 5,
-    y = 6;
-let cont = 0; //contador de posicion para el vector c_estados.
-let c_estados = [];
-
 class Automata{
     constructor(exp) {
         this.exp = exp;
@@ -34,13 +28,12 @@ class UI {
 document.getElementById('Formulario')
     .addEventListener('submit', function(e){
         const exp = document.getElementById('exp_reg').value;
-       
         
         const AF = new Automata(exp);
 
         const ui = new UI();
         ui.metodo_prueba(AF);
-        
+
         //const dib = new Dibujo();
 
 

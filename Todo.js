@@ -1,13 +1,11 @@
-class Dibujo{
+class UI{
     constructor(exp){
         this.exp=exp;
         this.x=100;
         this.y=100;
         this.estados=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","U","V","W","X","Y","Z"];
-        this.i=0;
-        this.j=0;
-        this.new_exp=[];
-        this.op_top=0;
+        this.i=0;//Contador de posicion para el arreglo estados.
+        this.j=0;//Contador general para funciones del grafo.
         this.front=0;
         this.top=0;
         this.cola=[];
@@ -18,9 +16,68 @@ class Dibujo{
         this.canvas = document.getElementById("lienzo");
         this.ctx = this.canvas.getContext("2d");
         this.valid=true;
+        this.n=0;
+        this.col_simb=[];//arreglo para verificar simbolos repetidos en la expresión regular.
     }
-
-    //dibujo abajo
+    //Tabla para Definicion AF
+    crear_tabla(){
+        const insertar = document.getElementById('definicion');
+        const element = document.createElement('div');
+        element.innerHTML = `
+            <div class = "card text-center text-white bg-primary mb-3"> 
+                <div class="card-body">
+                    <strong>Expresión Regular:  </strong> ${this.exp}
+                </div>
+            </div>
+            <div>
+                <table id="tabla" class="table table-bordered table-primary">
+                    <tr id="simb_ent">
+                        <td>Estados</td>
+                    </tr>
+                </table><br>
+            </div>
+        `;
+        insertar.appendChild(element);
+        this.formato_tabla();
+    }
+    formato_tabla(){
+        //Agregar simbolos a la tabla
+        for(let i=this.exp.length-1;i>=0;i--){
+            this.analiza_simb(this.exp[i]);
+        }
+        //Agregar estados a la tabla
+        for(let i=this.i-1;i>=0;i--){
+            this.filas(this.estados[i]);
+        }
+    }
+    analiza_simb(simb){
+        var repetido=false;
+        for(let j=0;j<this.col_simb.length;j++){
+            if(simb==this.col_simb[j]){
+                repetido=true;
+            }
+        }
+        if(repetido==false){
+            this.columnas(simb);
+            this.col_simb[this.n]=simb;
+            this.n++;
+        }
+        else{
+            repetido=false;
+        }
+    }
+    columnas(simb){
+        var row = document.getElementById("simb_ent");
+        var x = row.insertCell(1);
+        x.innerHTML = simb;
+    }
+    filas(simb){
+        var table = document.getElementById("tabla");
+        var row = table.insertRow(1);
+        var x = row.insertCell(0);
+        x.innerHTML = simb;
+    }
+    //Grafo AFN-epsilon
     circulo(){        
         this.ctx.moveTo(this.x,this.y);
         this.ctx.arc(this.x-25,this.y,25,0,2*Math.PI,true);
@@ -153,6 +210,7 @@ class Dibujo{
         this.ctx.restore();
 
     }
+    //Recorrido de expresion para el grafo
     recorrido(){
         this.estado_inicial();
         switch(this.exp.length){
@@ -281,6 +339,9 @@ class Dibujo{
         var canvas = document.getElementById("lienzo");
         canvas.width = canvas.width;
     }
+    resetearformulario(){
+        document.getElementById('Formulario').reset();
+    }
 }
 
 document.getElementById('Formulario')
@@ -288,19 +349,13 @@ document.getElementById('Formulario')
        // alert("1");
         const er = document.getElementById('exp_reg').value;
         var exp = er;
-        const graf = new Dibujo(exp.toLowerCase().trim().replace(/ /g, ""));
-        graf.borrar();
-        //graf.estado_inicial();
-        //graf.cerradura();
-        //graf.concatenacion();
-        //graf.estado_final();
-        graf.recorrido();
+        const ui = new UI(exp.toLowerCase().trim().replace(/ /g, ""));
+        ui.borrar();
+        ui.recorrido();
+        ui.crear_tabla();
 
-        //graf.analizar_exp();
 
-        
-       // alert("3");
-        graf.resetearformulario();
+        ui.resetearformulario();
         e.preventDefault();
     });
 

@@ -6,6 +6,7 @@ class UI{
         this.estados=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","U","V","W","X","Y","Z"];
         this.i=0;//Contador de posicion para el arreglo estados.
         this.j=0;//Contador general para funciones del grafo.
+        this.z=0;
         this.front=0;
         this.top=0;
         this.cola=[];
@@ -13,6 +14,8 @@ class UI{
         this.yi;
         this.xf;
         this.yf;
+        this.buscado=false;//Indicador de ejecucion del método buscar iniciado por '('
+        this.altura=75;//Altura para la liena de regreso epsilon en la cerradura.
         this.canvas = document.getElementById("lienzo");
         this.ctx = this.canvas.getContext("2d");
         this.valid=true;
@@ -60,9 +63,20 @@ class UI{
             }
         }
         if(repetido==false){
-            this.columnas(simb);
-            this.col_simb[this.n]=simb;
-            this.n++;
+            switch(simb){
+                case '(':
+                    break;
+                case ')':
+                    break;
+                case '*':
+                    break;
+                case '|':
+                    break;
+                default:
+                    this.columnas(simb);
+                    this.col_simb[this.n]=simb;
+                    this.n++;
+            }
         }
         else{
             repetido=false;
@@ -159,11 +173,12 @@ class UI{
         this.circulo();
         var x_inicial=this.x;
         var y_inicial=this.y;
-        for(let i=0;i<simbolos.length;i++){
-            this.flecha(simbolos[i]);
-            this.circulo();
+        if(simbolos.length==1){
+            this.concatenacion(simbolos);
         }
-        
+        else{
+            this.recorrido(simbolos);
+        }
         var x_final=this.x;
         var y_final=this.y;
         this.regresar(x_inicial,x_final,y_inicial,y_final)
@@ -172,9 +187,6 @@ class UI{
         var xef=this.x;
         var yef=this.y;
         this.linea_eps(xei,xef,yei,yef);
-    }
-    resetearformulario(){
-        document.getElementById('Formulario').reset();
     }
     concatenacion(simb){
         this.flecha(simb);
@@ -188,7 +200,7 @@ class UI{
         this.x=this.xi;
         this.y=this.yi;
         //this.i-=this.top;
-        this.y+=100;
+        this.y+=200;
         this.flecha_or('z');
     }
     estado_inicial(){
@@ -213,7 +225,7 @@ class UI{
 
     }
     //Recorrido de expresion para el grafo
-    recorrido(){
+    iniciar(){
         this.estado_inicial();
         switch(this.exp.length){
             case 0:
@@ -222,32 +234,34 @@ class UI{
                 this.validar(this.exp[0]);
                 if(this.valid){
                     this.concatenacion(this.exp);
-                    break;
                 }
-                else{
-                    break;
-                }
+                break;
             default:
-                this.validar(this.exp[0]);
-                if(this.valid){
-                    for(this.j=0;this.j<this.exp.length;this.j++){
-                        this.analiza(this.exp[this.j]);
-                    }
-                    do{
-                        this.pop();
-                    }while(this.front<this.top);
-                    break;
-                }
-                else{
-                    break;
-                }
-
+                    this.recorrido(this.exp);
         }
         if(this.valid){
             this.estado_final();
         }
         else{
-            this.borrar();
+            //this.borrar();
+        }
+    }
+    extra(expres){
+        if(this.z<5){
+            this.cerradura(expres);
+            this.z++;
+        }
+    }
+    recorrido(expresion){
+    this.validar(expresion[0]);
+        if(this.valid){
+            for(let i=0;i<expresion.length;i++){
+                this.j=i;
+                this.analiza(expresion[this.j],expresion);
+            }
+            do{
+                this.pop();
+            }while(this.front<this.top);
         }
     }
     validar(dato){
@@ -263,12 +277,11 @@ class UI{
             this.valid=false;
         }
     }
-    analiza(dato){
+    analiza(dato,expresion){
         if(dato=='*'||dato=='|'||dato=='('||dato==')'){
             switch(dato){
                 case ')':
-                    if(this.exp[this.j+1]!='*'){
-
+                    if(expresion[this.j+1]!='*'){
                     }
                     break;
                 case '(':
@@ -276,26 +289,35 @@ class UI{
                         this.pop();
                     }while(this.front<this.top);
                     this.limpiar_cola();
+                    this.buscar(expresion,this.j)//posicion del parentesis);
                     break;
                 case '*':
-                    if(this.exp[this.j-1]==')'){
-                        var cerra = this.cola;
-                        this.cerradura(cerra);
-                        this.limpiar_cola();
+                    if(!this.buscado){
+                        if(expresion[this.j-1]!=')'){//para expresiones diferentes a: (a)*
+                            if(this.front==this.top-1){//Para expresiones a*
+                                var cerra=expresion[this.j-1];
+                                this.cerradura(cerra);
+                                this.limpiar_cola();
+                            }
+                            else{//Para expresiones abcd...n*
+                                if(expresion[this.j-1]!='*'){
+                                    do{
+                                        this.pop();
+                                    }while(this.front<this.top-1);
+                                    this.limpiar_cola();
+                                    var cerra=expresion[this.j-1];
+                                    this.cerradura(cerra);
+                                }
+                            }
+                        }
+                        else{//Para expresiones iguales a: (a)*
+                            this.limpiar_cola();
+                        }
                     }
                     else{
-                        if(this.front==this.top-1){
-                            this.cerradura(this.exp[this.j-1]);
-                            this.limpiar_cola();
-                        }
-                        else{
-                            do{
-                                this.pop();
-                            }while(this.front<this.top-1);
-                            this.limpiar_cola();
-                            this.cerradura(this.exp[this.j-1]);
-                        }
+                        this.buscado=false;
                     }
+                    
                     break;
                     
                 case '|':
@@ -337,6 +359,23 @@ class UI{
         this.front=0;
         this.top=0;
     }
+    buscar(expresion,pos_i){
+        for(let i=0;i<expresion.length;i++){
+            if(expresion[i]==')'&&expresion[i+1]=='*'){
+                var pos_f=i;
+                this.recorrer_parentesis(expresion,pos_i,pos_f);
+                var cerra = this.cola;
+                this.limpiar_cola();
+                this.cerradura(cerra);
+            }
+        }
+        this.buscado=true;
+    }
+    recorrer_parentesis(expresion,pos_i,pos_f){
+        for(let i=pos_i+1;i<pos_f;i++){
+            this.push(expresion[i]);
+        }
+    }
     borrar(){
         var canvas = document.getElementById("lienzo");
         canvas.width = canvas.width;
@@ -348,12 +387,11 @@ class UI{
 
 document.getElementById('Formulario')
     .addEventListener('submit', function(e){
-       // alert("1");
         const er = document.getElementById('exp_reg').value;
         var exp = er;
         const ui = new UI(exp.toLowerCase().trim().replace(/ /g, ""));
         ui.borrar();
-        ui.recorrido();
+        ui.iniciar();
         ui.crear_tabla();
 
 

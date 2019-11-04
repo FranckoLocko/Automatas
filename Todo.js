@@ -63,20 +63,29 @@ class UI{
             }
         }
         if(repetido==false){
-            this.columnas(simb);
-            this.col_simb[this.n]=simb;
-            this.n++;
+            switch(simb){
+                case '(':
+                    break;
+                case ')':
+                    break;
+                case '*':
+                    break;
+                case '|':
+                    break;
+                default:
+                    this.columnas(simb);
+                    this.col_simb[this.n]=simb;
+                    this.n++;
+            }
         }
         else{
             repetido=false;
         }
     }
     columnas(simb){
-        if(simb!='('||simb!=')'||simb!='*'||simb!='|'){
-            var row = document.getElementById("simb_ent");
-            var x = row.insertCell(1);
-            x.innerHTML = simb;
-        }
+        var row = document.getElementById("simb_ent");
+        var x = row.insertCell(1);
+        x.innerHTML = simb;
     }
     filas(simb){
         var table = document.getElementById("tabla");

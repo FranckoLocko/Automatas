@@ -3,13 +3,13 @@ class UI{
         this.exp=exp;
         this.exp2;//almacena la expresión restante después de los paréntesis.
         this.x=100;
-        this.y=100;
+        this.y=250;
         this.estados=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","U","V","W","X","Y","Z"];
         this.contador=0//Ayuda al método "recorrer" a leer la expresión si en ella hay paréntesis.
         this.cont=0;
         this.cont2=0;
         this.abierto=0;
-        this.cerrado=0
+        this.cerrado=0;
         this.nivel_max=0;//Sirve para identificar en dónde se debe cortar la expresión después de analizar un paréntesis.
         this.pos_f=0;//se encarga de revisar que no se utilice el mismo ")*" para diferentes "("
         this.i=0;//Contador de posicion para el arreglo estados.
@@ -23,7 +23,8 @@ class UI{
         this.xf;
         this.yf;
         this.buscado=false;//Indicador de ejecucion del método buscar iniciado por '('
-        this.altura=75;//Altura para la liena de regreso epsilon en la cerradura.
+        this.altura=1;//Altura para la liena de regreso epsilon en la cerradura.
+        this.altura_normal=75;
         this.canvas = document.getElementById("lienzo");
         this.ctx = this.canvas.getContext("2d");
         this.valid=true;
@@ -128,12 +129,14 @@ class UI{
         this.ctx.lineTo(this.x-50,this.y);
         this.ctx.lineTo(this.x-60,this.y+10);
     }
-    regresar(x1,x2,y1,y2){
+    regresar(x1,x2,y1,y2,altura){
+        var alto =this.altura_normal*altura;
+        // alert(altura);
         this.ctx.moveTo(x2-25,y2-25);
-        this.ctx.quadraticCurveTo(((x2-50)+x1)/2,this.y-75,x1-25,y1-25);
+        this.ctx.quadraticCurveTo(((x2-50)+x1)/2,this.y-alto,x1-25,y1-25);
         this.ctx.font="20px arial";
         this.ctx.fillStyle="black";
-        this.ctx.fillText('ε',((x2-50)+x1)/2,this.y-60);
+        this.ctx.fillText('ε',((x2-50)+x1)/2,this.y-(alto-5));
         this.ctx.stroke();
         this.ctx.lineTo((x1-25)+5,(y1-25)-20);
         this.ctx.lineTo((x1-25),(y1-25));
@@ -181,7 +184,6 @@ class UI{
         this.circulo();
         var x_inicial=this.x;
         var y_inicial=this.y;
-        // alert(simbolos);
         if(simbolos.length==1){
             this.concatenacion(simbolos);
         }
@@ -190,7 +192,7 @@ class UI{
         }
         var x_final=this.x;
         var y_final=this.y;
-        this.regresar(x_inicial,x_final,y_inicial,y_final)
+        this.regresar(x_inicial,x_final,y_inicial,y_final,this.altura);
         this.flecha('ε');
         this.circulo();
         var xef=this.x;
@@ -434,7 +436,6 @@ class UI{
             }
             if(ejecutado){
                 this.exp2=this.exp.substring(corte);
-                alert(this.exp2);
                 this.contador=3;
                 this.buscado=true;
             }

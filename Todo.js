@@ -310,6 +310,7 @@ class UI{
                     this.cont++;
                     this.buscar(expresion,this.j)//posicion del parentesis);
                     this.cont=0;
+                    this.cont2=0;
                     break;
                 case '*':
                     if(!this.buscado){
@@ -402,9 +403,7 @@ class UI{
                     break;
             }
         }
-        alert(expresion[aux+1]);
         if(this.abierto>this.cerrado||expresion[aux+1]=='*'){
-            alert(pos_i);
             for(let i=pos_i+1;i<expresion.length;i++){
                 if(expresion[i]=='('){
                     this.cont++;
@@ -415,7 +414,6 @@ class UI{
                 if(expresion[i]==')'&&expresion[i+1]=='*'){
                     this.cont2++;
                     if(this.cont==this.cont2){
-                        alert("volvió a entrar");
                         if(i>this.pos_f){
                             this.cont=0;
                             this.cont2=0;
@@ -436,6 +434,7 @@ class UI{
             }
             if(ejecutado){
                 this.exp2=this.exp.substring(corte);
+                alert(this.exp2);
                 this.contador=3;
                 this.buscado=true;
             }

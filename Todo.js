@@ -1,9 +1,16 @@
 class UI{
     constructor(exp){
         this.exp=exp;
+        this.exp2;//almacena la expresión restante después de los paréntesis.
         this.x=100;
         this.y=100;
         this.estados=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","U","V","W","X","Y","Z"];
+        this.contador=0//Ayuda al método "recorrer" a leer la expresión si en ella hay paréntesis.
+        this.cont=0;
+        this.cont2=0;
+        this.nivel=0;
+        this.nivel_max=0;//Sirve para identificar en dónde se debe cortar la expresión después de analizar un paréntesis.
+        this.pos_f=0;//se encarga de revisar que no se utilice el mismo ")*" para diferentes "("
         this.i=0;//Contador de posicion para el arreglo estados.
         this.j=0;//Contador general para funciones del grafo.
         this.z=0;
@@ -173,6 +180,7 @@ class UI{
         this.circulo();
         var x_inicial=this.x;
         var y_inicial=this.y;
+        // alert(simbolos);
         if(simbolos.length==1){
             this.concatenacion(simbolos);
         }
@@ -237,27 +245,28 @@ class UI{
                 }
                 break;
             default:
+                    this.validar(this.exp[0]);
                     this.recorrido(this.exp);
         }
         if(this.valid){
             this.estado_final();
         }
         else{
-            //this.borrar();
-        }
-    }
-    extra(expres){
-        if(this.z<5){
-            this.cerradura(expres);
-            this.z++;
+            this.borrar();
         }
     }
     recorrido(expresion){
-    this.validar(expresion[0]);
         if(this.valid){
             for(let i=0;i<expresion.length;i++){
-                this.j=i;
-                this.analiza(expresion[this.j],expresion);
+                if(this.contador<3){
+                    this.j=i;
+                    this.analiza(expresion[this.j],expresion);
+                }
+            }
+            if(this.contador>=3){
+                this.contador=0;
+                this.recorrido(this.exp2);
+                this.exp2=[];
             }
             do{
                 this.pop();
@@ -281,7 +290,15 @@ class UI{
         if(dato=='*'||dato=='|'||dato=='('||dato==')'){
             switch(dato){
                 case ')':
-                    if(expresion[this.j+1]!='*'){
+                    if(expresion[this.j+1]=='*'){
+                        this.limpiar_cola();
+                        this.buscado=true;
+                    }
+                    else{
+                        
+                        do{
+                            this.pop();
+                        }while(this.front<this.top);
                     }
                     break;
                 case '(':
@@ -289,6 +306,7 @@ class UI{
                         this.pop();
                     }while(this.front<this.top);
                     this.limpiar_cola();
+                    this.cont++;
                     this.buscar(expresion,this.j)//posicion del parentesis);
                     break;
                 case '*':
@@ -315,6 +333,7 @@ class UI{
                         }
                     }
                     else{
+                        this.limpiar_cola();
                         this.buscado=false;
                     }
                     
@@ -359,17 +378,42 @@ class UI{
         this.front=0;
         this.top=0;
     }
+    //Revisa lo que va dentro de paréntesis
     buscar(expresion,pos_i){
-        for(let i=0;i<expresion.length;i++){
-            if(expresion[i]==')'&&expresion[i+1]=='*'){
-                var pos_f=i;
-                this.recorrer_parentesis(expresion,pos_i,pos_f);
-                var cerra = this.cola;
-                this.limpiar_cola();
-                this.cerradura(cerra);
+        var ejecutado = false;
+        for(let i=pos_i+1;i<expresion.length;i++){
+            if(expresion[i]=='('){
+                this.cont++;
             }
         }
-        this.buscado=true;
+        for(let i=pos_i+1;i<expresion.length;i++){
+            var corte;
+            if(expresion[i]==')'&&expresion[i+1]=='*'){
+                this.cont2++;
+                if(this.cont==this.cont2){
+                    if(i>this.pos_f){
+                        this.cont=0;
+                        this.cont2=0;
+                        this.pos_f=i;
+                        if(this.pos_f>this.nivel_max){
+                            this.nivel_max=this.pos_f;
+                        }
+                        corte=this.nivel_max;
+                        this.recorrer_parentesis(expresion,pos_i,this.pos_f);
+                        var cerra = this.cola;
+                        this.pos_f=0;
+                        this.limpiar_cola();
+                        ejecutado=true;
+                        this.cerradura(cerra);
+                    }
+                }
+            }
+        }
+        if(ejecutado){
+            this.exp2=this.exp.substring(corte);
+            this.contador=3;
+            this.buscado=true;
+        }
     }
     recorrer_parentesis(expresion,pos_i,pos_f){
         for(let i=pos_i+1;i<pos_f;i++){

@@ -5,6 +5,8 @@ class UI{
         this.x=100;
         this.y=250;
         this.estados=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","U","V","W","X","Y","Z"];
+        this.conjunt_est=[];//Arreglo de estados de la expresión.
+        this.conjunt_simb=[];//Arreglo de símbolos de la expresión.
         this.contador=0//Ayuda al método "recorrer" a leer la expresión si en ella hay paréntesis.
         this.cont=0;
         this.cont2=0;
@@ -32,6 +34,11 @@ class UI{
         this.col_simb=[];//arreglo para verificar simbolos repetidos en la expresión regular.
     }
     //Tabla para Definicion AF
+    variables_definicion(){
+        for(let i=0;i<this.exp.length;i++){
+            this.analiza_simb(this.exp[i],0);
+        }
+    }
     crear_tabla(){
         const insertar = document.getElementById('definicion');
         const element = document.createElement('div');
@@ -39,6 +46,14 @@ class UI{
             <div class = "card text-center text-white bg-primary mb-3"> 
                 <div class="card-body">
                     <strong>Expresión Regular:  </strong> ${this.exp}
+                    <div><strong>Definición:  </strong></div>
+                    <div>AF=(Q,Σ,δ,q0,F)</div>
+                    <div><strong>Donde:  </strong></div>
+                    <div><strong>Q=</strong>{${this.conjunt_est}}</div>
+                    <div><strong>Σ=</strong>{${this.conjunt_simb}}</div>
+                    <div><strong>δ=</strong>Q#xΣ#=${this.conjunt_est.length}x${this.conjunt_simb.length}=${this.conjunt_est.length*this.conjunt_simb.length}</div>
+                    <div><strong>q0=</strong>A</div>
+                    <div><strong>F=</strong>{${this.estados[this.i-1]}}</div>
                 </div>
             </div>
             <div>
@@ -57,18 +72,27 @@ class UI{
         this.columnas('F')
         this.columnas('ε');
         for(let i=this.exp.length-1;i>=0;i--){
-            this.analiza_simb(this.exp[i]);
+            this.analiza_simb(this.exp[i],1);
         }
         //Agregar estados a la tabla
         for(let i=this.i-1;i>=0;i--){
             this.filas(this.estados[i]);
         }
     }
-    analiza_simb(simb){
+    analiza_simb(simb,tipo){
         var repetido=false;
-        for(let j=0;j<this.col_simb.length;j++){
-            if(simb==this.col_simb[j]){
-                repetido=true;
+        if(tipo==0){
+            for(let i=0;i<this.conjunt_simb.length;i++){
+                if(simb==this.conjunt_simb[i]){
+                    repetido=true;
+                }
+            }
+        }
+        else{
+            for(let j=0;j<this.col_simb.length;j++){
+                if(simb==this.col_simb[j]){
+                    repetido=true;
+                }
             }
         }
         if(repetido==false){
@@ -82,9 +106,16 @@ class UI{
                 case '|':
                     break;
                 default:
-                    this.columnas(simb);
-                    this.col_simb[this.n]=simb;
-                    this.n++;
+                    if(tipo==0){
+                        this.conjunt_simb[this.z]=simb;
+                        this.z++;
+                    }
+                    else{
+                        this.columnas(simb);
+                        this.col_simb[this.n]=simb;
+                        this.n++;
+                    }
+      
             }
         }
         else{
@@ -169,6 +200,7 @@ class UI{
         txt.font="20px arial";
         txt.fillStyle="black";
         txt.fillText(this.estados[this.i],x1,y1);
+        this.conjunt_est[this.i]=this.estados[this.i];
         this.i+=1;
     }
     escribir(simb,x1,y1){
@@ -466,6 +498,7 @@ document.getElementById('Formulario')
         const ui = new UI(exp.toLowerCase().trim().replace(/ /g, ""));
         ui.borrar();
         ui.iniciar();
+        ui.variables_definicion();
         ui.crear_tabla();
 
 

@@ -491,7 +491,7 @@ class UI{
     }
 }
 
-document.getElementById('Formulario')
+/*document.getElementById('Formulario')
     .addEventListener('submit', function(e){
         const er = document.getElementById('exp_reg').value;
         var exp = er;
@@ -504,5 +504,26 @@ document.getElementById('Formulario')
 
         ui.resetearformulario();
         e.preventDefault();
+    });*/
+
+    document.getElementById('Formulario')
+    .addEventListener('submit', function(e){
+        const er = document.getElementById('exp_reg').value;
+        //Función Cookie set
+        localStorage.setItem('exp_reg', er);
+    localStorage.setItem('borrar', true);
+        location.reload();
+        
     });
+window.addEventListener('load', function(e) {
+    
+    var localexp = localStorage.getItem('exp_reg');
+        var exp = localexp;
+    const ui = new UI(exp.toLowerCase().trim().replace(/ /g, ""));
+        ui.borrar();
+        ui.iniciar();
+        ui.crear_tabla();
+        ui.resetearformulario();
+        e.preventDefault();
+})
 
